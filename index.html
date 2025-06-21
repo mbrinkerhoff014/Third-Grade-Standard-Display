@@ -8,11 +8,11 @@
       font-family: sans-serif;
       padding: 20px;
     }
-    .selector, .display {
-      margin-bottom: 40px;
+    .page {
+      display: none;
     }
-    h2 {
-      margin-top: 40px;
+    .visible {
+      display: block;
     }
     .subject-button {
       padding: 10px 20px;
@@ -34,60 +34,47 @@
       font-size: 24px;
       line-height: 1.6;
     }
-    .hidden {
-      display: none;
-    }
-    .collapsible {
-      background-color: #eee;
-      color: #444;
-      cursor: pointer;
-      padding: 10px;
-      width: 100%;
-      border: none;
-      text-align: left;
-      outline: none;
-      font-size: 16px;
-      margin-bottom: 5px;
-    }
-    .active, .collapsible:hover {
-      background-color: #ccc;
-    }
-    .content {
-      padding: 0 18px;
-      display: none;
-      overflow: hidden;
-      background-color: #f9f9f9;
-    }
     #searchBar {
       padding: 10px;
       margin-bottom: 20px;
       width: 100%;
       font-size: 16px;
     }
+    .tab-button {
+      margin: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-  <h1>3rd Grade Standards</h1>
-
-  <div class="display">
-    <h2>Display Mode</h2>
+  <div id="displayPage" class="page visible">
+    <h1>3rd Grade Standards - Display Mode</h1>
     <button class="subject-button" onclick="showSelected('Reading')">Reading</button>
     <button class="subject-button" onclick="showSelected('Math')">Math</button>
     <button class="subject-button" onclick="showSelected('Science')">Science</button>
     <button class="subject-button" onclick="showSelected('Social Studies')">Social Studies</button>
-    <button class="subject-button" onclick="document.querySelector('.selector').classList.remove('hidden')">Select Standards</button>
+    <button class="subject-button" onclick="switchPage('selectPage')">Select Standards</button>
     <div id="displayArea"></div>
   </div>
 
-  <div class="selector hidden">
+  <div id="selectPage" class="page">
+    <h1>Select Standards</h1>
     <input type="text" id="searchBar" placeholder="Search standards..." oninput="filterStandards()">
-    <h2>Select Standards</h2>
+    <div>
+      <button class="tab-button" onclick="switchSubject('Reading')">Reading</button>
+      <button class="tab-button" onclick="switchSubject('Math')">Math</button>
+      <button class="tab-button" onclick="switchSubject('Science')">Science</button>
+      <button class="tab-button" onclick="switchSubject('Social Studies')">Social Studies</button>
+    </div>
     <div id="standards"></div>
+    <br>
+    <button onclick="switchPage('displayPage')">Display Mode</button>
   </div>
 
   <script>
     const standardsData = [
-     {tag: "RL.3.1 ", subject: "Reading", text: " I can ask and answer questions to show I understand a story. ", success: " • Create questions about a story that can be answered from the text • Answer questions using evidence from the story "},
+      {tag: "RL.3.1 ", subject: "Reading", text: " I can ask and answer questions to show I understand a story. ", success: " • Create questions about a story that can be answered from the text • Answer questions using evidence from the story "},
 {tag: "RL.3.2 ", subject: "Reading", text: " I can retell stories and explain the lesson or moral. ", success: " • Retell fables, folktales, and myths in detail • Explain the lesson or moral with text details "},
 {tag: "RL.3.3 ", subject: "Reading", text: " I can describe characters and explain how their actions affect the story. ", success: " • Describe traits, motivations, feelings of characters • Explain how their actions move events forward "},
 {tag: "RL.3.4 ", subject: "Reading", text: " I can figure out the meaning of words and phrases, including idioms. ", success: " • Use context clues for literal meanings • Recognize idioms, similes, metaphors "},
@@ -193,10 +180,22 @@
     ];
 
     const selectedTags = new Set();
+    let currentSubject = 'Reading';
+
+    function switchPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('visible'));
+      document.getElementById(pageId).classList.add('visible');
+    }
+
+    function switchSubject(subject) {
+      currentSubject = subject;
+      renderStandards();
+    }
 
     function renderStandards() {
       const container = document.getElementById('standards');
-      standardsData.forEach(s => {
+      container.innerHTML = '';
+      standardsData.filter(s => s.subject === currentSubject).forEach(s => {
         const div = document.createElement('div');
         div.className = 'standard';
         div.innerHTML = `<label><input type="checkbox" onchange="toggleStandard(this, '${s.tag}')"> <strong>${s.tag}</strong>: ${s.text}<br><em>${s.success}</em></label>`;
@@ -229,7 +228,9 @@
       display.innerHTML = selectedStandards.map(std => `<div><strong>${std.tag}</strong>: ${std.text}<br><em>${std.success}</em></div>`).join('<hr>');
     }
 
-    window.onload = renderStandards;
+    window.onload = () => {
+      renderStandards();
+    }
   </script>
 </body>
 </html>
