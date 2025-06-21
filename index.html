@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -31,6 +31,8 @@
       border: 1px solid #aaa;
       padding: 20px;
       background: #f1f1f1;
+      font-size: 24px;
+      line-height: 1.6;
     }
     .hidden {
       display: none;
@@ -166,6 +168,7 @@
 {tag: "3.G.A.1 ", text: " I can understand shapes by their sides and angles. ", success: " • Describe shapes (triangle, quadrilateral) by counting sides/angles "},
 {tag: "3.G.A.2 ", text: " I can make shapes using their lengths and angles. ", success: " • Draw shapes accurately using attributes "},
 {tag: "3.G.A.3 ", text: " I can recognize area and perimeter as different measures. ", success: " • Explain that perimeter measures boundary, area measures space inside "},
+        ],
       Science: [
         {tag: "3‑PS2‑1         ", text: " I can investigate how balanced and unbalanced forces affect motion.                       ", success: " • Plan and do an experiment with pushes/pulls • Describe how motion changed when forces weren’t balanced "},
 {tag: "3‑PS2‑2", text: " I can observe patterns in how things move. ", success: " • Measure or watch something move • Explain the pattern to predict what happens next "},
@@ -237,7 +240,7 @@
     function showSelected(subject) {
       const checkboxes = document.querySelectorAll(`input[type=checkbox]:checked`);
       const displayArea = document.getElementById("displayArea");
-      displayArea.innerHTML = "<h3>Selected Standards for " + subject + "</h3>";
+      displayArea.innerHTML = "";
 
       let hasContent = false;
       checkboxes.forEach(cb => {
@@ -246,7 +249,7 @@
           const text = cb.getAttribute("data-text");
           const success = cb.getAttribute("data-success");
           displayArea.innerHTML += `
-            <p><strong>${tag}</strong>: ${text}<br><em>Success Criteria:</em> ${success}</p>`;
+            <p><strong>${tag}</strong><br>${text}<br><em>Success Criteria:</em><br>${success}</p><hr>`;
           hasContent = true;
         }
       });
