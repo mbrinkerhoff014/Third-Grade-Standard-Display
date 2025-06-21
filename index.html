@@ -67,26 +67,72 @@
   </style>
 </head>
 <body>
-  <h1>3rd Grade Standards Selector</h1>
+  <h1>3rd Grade Standards</h1>
 
-  <input type="text" id="searchBar" placeholder="Search standards..." oninput="filterStandards()">
+  <div class="display">
+    <h2>Display Mode</h2>
+    <button class="subject-button" onclick="filterBySubject('Reading')">Reading</button>
+    <button class="subject-button" onclick="filterBySubject('Math')">Math</button>
+    <button class="subject-button" onclick="filterBySubject('Science')">Science</button>
+    <button class="subject-button" onclick="filterBySubject('Social Studies')">Social Studies</button>
+    <button class="subject-button" onclick="document.querySelector('.selector').classList.remove('hidden')">Select Standards</button>
+    <div id="displayArea"></div>
+  </div>
 
-  <div class="selector">
+  <div class="selector hidden">
+    <input type="text" id="searchBar" placeholder="Search standards..." oninput="filterStandards()">
     <h2>Select Standards</h2>
     <div id="standards"></div>
   </div>
 
-  <div class="display">
-    <h2>Display Mode</h2>
-    <button class="subject-button" onclick="showSelected('Reading')">Reading</button>
-    <button class="subject-button" onclick="showSelected('Math')">Math</button>
-    <button class="subject-button" onclick="showSelected('Science')">Science</button>
-    <button class="subject-button" onclick="showSelected('Social Studies')">Social Studies</button>
-
-    <div id="displayArea" class="hidden"></div>
-  </div>
-
   <script>
+    const standardsData = [
+      { tag: "RL.3.6", subject: "Reading", text: "I can tell my point of view from the narrator’s or characters’.", success: "Form my own opinion separate from characters’; Explain similarities and differences from narrator/character perspective" },
+      { tag: "RL.3.7", subject: "Reading", text: "I can explain how illustrations add meaning to a story.", success: "Identify illustrations that support the story; Explain how they add meaning (mood, setting, character)" },
+      { tag: "RL.3.9", subject: "Reading", text: "I can compare and contrast themes, settings, and plots in books by the same author.", success: "Define theme, setting, plot; Compare these elements in similar books by the same author" },
+      { tag: "RL.3.10", subject: "Reading", text: "I can read and understand grade‑level stories, dramas, and poems independently.", success: "Read different types of literature with comprehension; Use reading strategies when needed" },
+      { tag: "RI.3.1", subject: "Reading", text: "I can ask and answer questions to show I understand nonfiction.", success: "Ask & answer questions referring explicitly to text; Locate answers within the nonfiction text" },
+      { tag: "RI.3.2", subject: "Reading", text: "I can determine the main idea and explain key details.", success: "Identify what the text is about; Choose supporting details and explain how they support the main idea" }
+      // Add more standards as needed
+    ];
+
+    function renderStandards() {
+      const container = document.getElementById('standards');
+      standardsData.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'standard';
+        div.innerHTML = `<label><input type="checkbox" onchange="updateDisplay()" data-subject="${s.subject}" value="${s.tag}"> <strong>${s.tag}</strong>: ${s.text}<br><em>${s.success}</em></label>`;
+        container.appendChild(div);
+      });
+      updateDisplay();
+    }
+
+    function filterStandards() {
+      const query = document.getElementById('searchBar').value.toLowerCase();
+      document.querySelectorAll('.standard').forEach(div => {
+        div.style.display = div.textContent.toLowerCase().includes(query) ? '' : 'none';
+      });
+    }
+
+    function updateDisplay() {
+      const display = document.getElementById('displayArea');
+      const checked = Array.from(document.querySelectorAll('#standards input:checked'));
+      const selected = checked.map(cb => {
+        const std = standardsData.find(s => s.tag === cb.value);
+        return `<div><strong>${std.tag}</strong>: ${std.text}<br><em>${std.success}</em></div>`;
+      });
+      display.innerHTML = selected.join('<hr>');
+    }
+
+    function filterBySubject(subject) {
+      const checkboxes = document.querySelectorAll('#standards input');
+      checkboxes.forEach(cb => {
+        const std = standardsData.find(s => s.tag === cb.value);
+        cb.checked = std.subject === subject;
+      });
+      updateDisplay();
+    }
+
     window.onload = renderStandards;
   </script>
 </body>
