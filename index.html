@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>3rd Grade Standards Selector</title>
+  <link href="https://fonts.googleapis.com/css2?family=Ultra&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: sans-serif;
+      font-family: 'Ultra', serif;
       padding: 20px;
+      margin: 0;
     }
     .page {
       display: none;
@@ -30,9 +32,11 @@
     #displayArea {
       border: 1px solid #aaa;
       padding: 20px;
-      background: #f1f1f1;
+      background: lavender;
       font-size: 24px;
       line-height: 1.6;
+      border-radius: 12px;
+      margin-top: 20px;
     }
     #searchBar {
       padding: 10px;
@@ -45,16 +49,32 @@
       padding: 5px 10px;
       cursor: pointer;
     }
+    .top-right-buttons {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+    .top-right-buttons button {
+      margin-left: 10px;
+      padding: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+  <div class="top-right-buttons">
+    <button onclick="switchPage('selectPage')">Select Standards</button>
+    <button onclick="switchPage('displayPage')">Display Mode</button>
+    <button onclick="toggleFullScreen()">⛶</button>
+  </div>
+
   <div id="displayPage" class="page visible">
     <h1>3rd Grade Standards - Display Mode</h1>
     <button class="subject-button" onclick="showSelected('Reading')">Reading</button>
     <button class="subject-button" onclick="showSelected('Math')">Math</button>
     <button class="subject-button" onclick="showSelected('Science')">Science</button>
     <button class="subject-button" onclick="showSelected('Social Studies')">Social Studies</button>
-    <button class="subject-button" onclick="switchPage('selectPage')">Select Standards</button>
     <div id="displayArea"></div>
   </div>
 
@@ -68,8 +88,6 @@
       <button class="tab-button" onclick="switchSubject('Social Studies')">Social Studies</button>
     </div>
     <div id="standards"></div>
-    <br>
-    <button onclick="switchPage('displayPage')">Display Mode</button>
   </div>
 
   <script>
@@ -226,6 +244,16 @@
         return;
       }
       display.innerHTML = selectedStandards.map(std => `<div><strong>${std.tag}</strong>: ${std.text}<br><em>${std.success}</em></div>`).join('<hr>');
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
     }
 
     window.onload = () => {
