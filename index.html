@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3rd Grade Standards Selector</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .selector, .display {
+      margin-bottom: 40px;
+    }
+    h2 {
+      margin-top: 40px;
+    }
+    .subject-button {
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+    }
+    .standard {
+      margin: 10px 0;
+    }
+    .standard label {
+      display: block;
+    }
+    #displayArea {
+      border: 1px solid #aaa;
+      padding: 20px;
+      background: #f1f1f1;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>3rd Grade Standards Selector</h1>
+
+  <div class="selector">
+    <h2>Select Standards</h2>
+    <div id="standards"></div>
+  </div>
+
+  <div class="display">
+    <h2>Display Mode</h2>
+    <button class="subject-button" onclick="showSelected('Reading')">Reading</button>
+    <button class="subject-button" onclick="showSelected('Math')">Math</button>
+    <button class="subject-button" onclick="showSelected('Science')">Science</button>
+    <button class="subject-button" onclick="showSelected('Social Studies')">Social Studies</button>
+
+    <div id="displayArea" class="hidden"></div>
+  </div>
+
+  <script>
+    const standards = {
+      Reading: [
+        { tag: "RL.3.1", text: "I can ask and answer questions to show I understand a story.", success: "Create and answer questions using story details." },
+        { tag: "RI.3.2", text: "I can determine the main idea and key details of a nonfiction text.", success: "Find and explain the main idea and how details support it." },
+        // Add the rest here...
+      ],
+      Math: [
+        { tag: "3.OA.1", text: "I can understand multiplication as equal groups.", success: "Show and explain multiplication as repeated addition or groups." },
+        { tag: "3.NF.1", text: "I can understand fractions as equal parts of a whole.", success: "Explain fractions using shapes or number lines." },
+        // Add more math standards...
+      ],
+      Science: [
+        { tag: "3-PS2-1", text: "I can investigate how forces affect motion.", success: "Describe how pushes and pulls change motion." },
+        // Add more science standards...
+      ],
+      "Social Studies": [
+        { tag: "SS.CV.1.3", text: "I can explain how communities work together.", success: "Give examples of rules, responsibilities, and helpers." },
+        // Add more social studies standards...
+      ]
+    };
+
+    const standardsDiv = document.getElementById("standards");
+    Object.keys(standards).forEach(subject => {
+      const container = document.createElement("div");
+      container.innerHTML = `<h3>${subject}</h3>`;
+      standards[subject].forEach((s, i) => {
+        const id = `${subject}-${i}`;
+        container.innerHTML += `
+          <div class="standard">
+            <label><input type="checkbox" value="${subject}" data-tag="${s.tag}" data-text="${s.text}" data-success="${s.success}" id="${id}"> <strong>${s.tag}</strong>: ${s.text}</label>
+          </div>`;
+      });
+      standardsDiv.appendChild(container);
+    });
+
+    function showSelected(subject) {
+      const checkboxes = document.querySelectorAll(`input[type=checkbox]:checked`);
+      const displayArea = document.getElementById("displayArea");
+      displayArea.innerHTML = "<h3>Selected Standards for " + subject + "</h3>";
+
+      let hasContent = false;
+      checkboxes.forEach(cb => {
+        if (cb.value === subject) {
+          const tag = cb.getAttribute("data-tag");
+          const text = cb.getAttribute("data-text");
+          const success = cb.getAttribute("data-success");
+          displayArea.innerHTML += `
+            <p><strong>${tag}</strong>: ${text}<br><em>Success Criteria:</em> ${success}</p>`;
+          hasContent = true;
+        }
+      });
+
+      displayArea.classList.toggle("hidden", !hasContent);
+    }
+  </script>
+</body>
+</html>
